@@ -21,7 +21,7 @@ export const useAuth = async (email: string, password: string): Promise<boolean>
       maxAge: expirationSeconds,
       path: '/',
       sameSite: 'strict',
-      secure: true,
+      secure: false,
     })
 
     cookie.value = data.access_token
