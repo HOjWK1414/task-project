@@ -1,0 +1,36 @@
+# 🧠 Nuxt
+.nuxt/
+.output/
+node_modules/
+.env
+.env.*
+
+# 🧠 TypeScript
+*.tsbuildinfo
+
+# 🧠 Vite / Webpack
+dist/
+*.log
+
+# 🧠 C# / Visual Studio
+.vs/
+bin/
+obj/
+*.user
+*.suo
+
+# 🧠 Mac/Linux/Windows
+.DS_Store
+Thumbs.db
+
+# 🧠 Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# 🧠 IDE config
+.idea/
+.vscode/
