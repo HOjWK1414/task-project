@@ -9,7 +9,6 @@ export default defineNuxtConfig({
     dirs: ['utils']
   },
   compatibilityDate: '2025-05-25',
-  modules: ['@pinia/nuxt'],
   css: ['@/assets/css/tailwind.css'],
   postcss: {
     plugins: {
@@ -17,5 +16,5 @@ export default defineNuxtConfig({
       autoprefixer: {}
     }
   },
-  devtools: { enabled: true }
+  devtools: { enabled: false }
 })

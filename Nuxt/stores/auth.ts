@@ -1,34 +1,35 @@
-import { defineStore } from 'pinia'
-import type { UserDto } from '~/models/appDtos/units/userDto'
-import type { LoginRequest } from '~/models/appDtos/units/authorization/requests/loginRequest'
-import type { LoginResponse } from '~/models/appDtos/units/authorization/responses/loginResponse'
+export const useAuth = async (email: string, password: string): Promise<boolean> => {
+  const basic = btoa(`${email}:${password}`)
 
-import type { RegisterRequest } from '~/models/appDtos/units/authorization/requests/registerRequest'
-
-export const useAuthStore = defineStore('auth', () => {
-  const user = ref<UserDto | null>(null)
-  const token = ref<string | null>(null)
-  const apiBaseUrl = useRuntimeConfig().public.apiBaseUrl as string
-
-  const register = async (data: RegisterRequest) => {
-    await $fetch('/api/auth/register', {
-      baseURL: apiBaseUrl,
-      method: 'POST',
-      body: data
-    })
-  }
-
-  const login = async (data: LoginRequest) => {
-    const response = await $fetch<LoginResponse>('/api/auth/login', {
-      baseURL: apiBaseUrl,
-      method: 'POST',
-      body: data
+  try {
+    const res = await fetch('https://api.dms.keysmash.eu/users/token', {
+      method: 'GET',
+      headers: {
+        Authorization: `Basic ${basic}`,
+        Accept: 'application/json',
+      },
     })
 
-    user.value = response.User
-    token.value = response.Token
-    localStorage.setItem('token', response.Token)
-  }
+    if (!res.ok) throw new Error('Neplatné přihlašovací údaje')
 
-  return { user, token, login, register }
-})
+    const data = await res.json()
+
+    const expirationDate = new Date(data.access_token_expiration)
+    const expirationSeconds = Math.floor((expirationDate.getTime() - Date.now()) / 1000)
+
+    const cookie = useCookie('token', {
+      maxAge: expirationSeconds,
+      path: '/',
+      sameSite: 'strict',
+      secure: true,
+    })
+
+    cookie.value = data.access_token
+
+    return true
+  } catch (err) {
+    console.error('Login failed', err)
+    return false
+  }
+}
+
