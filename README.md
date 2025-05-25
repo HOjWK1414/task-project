@@ -6,6 +6,7 @@ Fullstack - Nuxt ASP.NET Core (C#)
 
 Struktura projektu
 
+```
 App/
 ├── Nuxt/ # Frontend (Nuxt 3)
 │ ├── pages/ # Stránky aplikace
@@ -26,3 +27,4 @@ App/
 │
 │
 └── TaskScheduler/ # runner pro CLI nástroje (např. export DTOs)
+```
