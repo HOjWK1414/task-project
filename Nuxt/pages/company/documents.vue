@@ -58,7 +58,6 @@ const PageModel = {
 
 // Models
 import type { CompanyDocument } from '~/models/external/keysmash/companyDocument'
-import { defaultDocumentsFilter } from '~/models/shared/documentsFilterModel'
 
 // Utils
 import { fetchExternal } from '~/utils/fetchExternal'

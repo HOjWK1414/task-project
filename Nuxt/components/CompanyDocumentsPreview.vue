@@ -98,9 +98,20 @@ const props = defineProps<{ documents: CompanyDocument[] }>()
 const selectedDocument = ref<CompanyDocument | null>(null)
 const document = ref<string>("")
 
-function selectDocument(doc: CompanyDocument) {
-    selectedDocument.value = doc
-}
+watch(
+    () => props.documents,
+    async (newDocs) => {
+        if (newDocs.length > 0) {
+            await loadDocument(newDocs[0])
+        }
+    }
+)
+
+onMounted(async () => {
+    if (props.documents && props.documents.length > 0) {
+        await loadDocument(props.documents[0])
+    }
+})
 
 const metadata = computed(() => selectedDocument.value?.metadata?.[0])
 const hasValidDocument = computed(() => selectedDocument.value && document.value && document.value.trim() !== '')
