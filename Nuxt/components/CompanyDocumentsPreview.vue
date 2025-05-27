@@ -64,7 +64,7 @@
                         <div class="p-2 grid grid-cols-2 gap-4 text-sm">
                             <div v-for="field in fields" :key="field.label">
                                 <Label class="p-1" :for="field.label">{{ field.label }}</Label>
-                                <Input :id="field.label" :value="field.value" :placeholder="field.placeholder" />
+                                <Input :id="field.label" v-model="field.label" :placeholder="field.placeholder" />
                             </div>
                         </div>
                     </template>
