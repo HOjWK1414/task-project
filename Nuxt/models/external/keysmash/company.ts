@@ -1,5 +1,5 @@
 
-import type { CompanyStatistics } from './companyStatistics'
+import type { CompanyStatistics } from './companyStatistic'
 
 export interface Company {
     id: number

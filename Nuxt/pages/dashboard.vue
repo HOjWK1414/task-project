@@ -20,7 +20,8 @@
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    <TableRow v-for="company in filteredCompanies" :key="company.id">
+                    <TableRow v-for="company in filteredCompanies" :key="company.id"
+                        v-on:click="redirectToDocuments(company.id)">
                         <TableCell>{{ company.id }}</TableCell>
                         <TableCell>{{ company.name }}</TableCell>
                         <TableCell>{{ company.statistics?.approved ?? '-' }}</TableCell>
@@ -50,7 +51,6 @@
 
 // Page Model
 import { dashboardPageModel, type DashboardPageModel } from '~/models/pages/dashboardPageModel'
-import RoutePath from '~/components/RoutePath.vue'
 
 // Types
 import type { Company } from '~/models/external/keysmash/company'
@@ -63,18 +63,20 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '~
 import { Input } from '~/components/ui/input'
 import { Pagination, PaginationNext, PaginationPrevious, } from '~/components/ui/pagination'
 
+// Vue
+import RoutePath from '~/components/RoutePath.vue'
+
 // Auth
-const token = useCookie('token').value
 
 const PageModel = reactive<DashboardPageModel>(structuredClone(dashboardPageModel))
 
 const { data: fetchedCompanies } = await useAsyncData<Company[]>('companies', async () => {
-    const companies = await fetchExternal<Company[]>('/companies', token!)
+    const companies = await fetchExternal<Company[]>('/companies', getToken()!)
 
     await Promise.all(
         companies.map(async (company) => {
             try {
-                company.statistics = await fetchExternal(`/companies/${company.id}/statistics`, token!)
+                company.statistics = await fetchExternal(`/companies/${company.id}/statistics`, getToken()!)
             } catch {
                 company.statistics = undefined
             }
@@ -84,6 +86,7 @@ const { data: fetchedCompanies } = await useAsyncData<Company[]>('companies', as
     return companies
 })
 
+//* CSR
 watchEffect(() => {
     if (fetchedCompanies.value) {
         PageModel.data.companies = fetchedCompanies.value
@@ -95,5 +98,10 @@ const filteredCompanies = computed(() =>
         c.name.toLowerCase().includes(PageModel.data.filter.toLowerCase())
     )
 )
+
+function redirectToDocuments(id: number) {
+    const router = useRouter()
+    router.push('/documents?id=' + id)
+}
 
 </script>

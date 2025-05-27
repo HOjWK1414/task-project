@@ -5,6 +5,10 @@ export const ROUTES = {
     },
     dashboard: {
         name: 'Dashboard',
-        path: '/protected/dashboard',
+        path: '/dashboard',
+    },
+    documents: {
+        name: 'Documents',
+        path: '/dashboard/documents',
     },
 }
