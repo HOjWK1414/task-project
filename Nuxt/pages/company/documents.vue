@@ -1,7 +1,7 @@
 <template>
     <div class="space-y-4 px-6 py-4">
 
-        <RoutePath />
+        <RoutePath :keys="{ id: companyId.toString() }" />
 
         <!-- Filters -->
         <div class="flex items-center gap-4">
@@ -47,12 +47,18 @@
 <script setup lang="ts">
 
 // PageModel
-import { documentsPageModel, type DocumentsPageModel } from '~/models/pages/documentsPageModel'
-const PageModel = documentsPageModel
-PageModel.data = reactive(documentsPageModel.data)
+import { documentsPageModel, type DocumentsPageModel } from '~/models/pages/company/documentsPageModel'
+const staticPageModel = documentsPageModel
+const reactiveData = reactive(structuredClone(documentsPageModel.data))
+
+const PageModel = {
+    ...staticPageModel,
+    data: reactiveData
+}
 
 // Models
 import type { CompanyDocument } from '~/models/external/keysmash/companyDocument'
+import { defaultDocumentsFilter } from '~/models/shared/documentsFilterModel'
 
 // Utils
 import { fetchExternal } from '~/utils/fetchExternal'
@@ -69,6 +75,7 @@ import { Pagination, PaginationContent, PaginationNext, PaginationPrevious, Pagi
 import { useRoute } from 'vue-router'
 import { useAsyncData } from 'nuxt/app'
 import { watch } from 'vue'
+
 
 const route = useRoute()
 const companyId = Number(route.query.id)

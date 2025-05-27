@@ -1,9 +1,3 @@
 <template>
-  <NuxtPage />
+  <NuxtLayout />
 </template>
-
-<style>
-a {
-  @apply underline;
-}
-</style>

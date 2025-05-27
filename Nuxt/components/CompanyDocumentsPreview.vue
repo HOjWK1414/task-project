@@ -5,26 +5,33 @@
             <!-- Dokumenty -->
             <ResizablePanel :defaultSize="25" :minSize="10" class="border-r pr-2">
                 <ScrollArea class="h-full pr-3">
-                    <Card v-for="doc in documents" :key="doc.id"
-                        :class="['mb-2 cursor-pointer transition hover:bg-accent', selectedDocument?.id === doc.id ? 'bg-muted' : '']"
-                        v-on:click="loadDocument(doc)">
-                        <CardContent class=" p-3 text-sm flex justify-between items-start gap-4">
-                            <div class="flex flex-col items-start gap-1 max-w-[65%]">
-                                <span class="flex h-2 w-2 rounded-full bg-orange-500 mb-1" />
-                                <div class="text-xs font-medium">{{ doc.id }}</div>
-                                <div class="text-muted-foreground line-clamp-2 text-xs">{{ doc.file_name }}</div>
-                            </div>
-                            <div class="flex flex-col items-end gap-1 max-w-[35%]">
-                                <div class="ml-auto text-xs text-foreground">
-                                    {{ formatDate(doc.created_at) }}
+                    <template v-if="documents.length > 0">
+                        <Card v-for="doc in documents" :key="doc.id"
+                            :class="['mb-2 cursor-pointer transition hover:bg-accent', selectedDocument?.id === doc.id ? 'bg-muted' : '']"
+                            v-on:click="loadDocument(doc)">
+                            <CardContent class=" p-3 text-sm flex justify-between items-start gap-4">
+                                <div class="flex flex-col items-start gap-1 max-w-[65%]">
+                                    <span class="flex h-2 w-2 rounded-full bg-orange-500 mb-1" />
+                                    <div class="text-xs font-medium">{{ doc.id }}</div>
+                                    <div class="text-muted-foreground line-clamp-2 text-xs">{{ doc.file_name }}</div>
                                 </div>
-                                <div class="text-xs truncate w-full text-right"
-                                    :class="selectedDocument?.id === doc.id ? 'text-foreground font-semibold' : 'text-muted-foreground font-medium'">
-                                    {{ doc.metadata?.[0]?.invoice?.invoice_type?.name ?? '—' }}
+                                <div class="flex flex-col items-end gap-1 max-w-[35%]">
+                                    <div class="ml-auto text-xs text-foreground">
+                                        {{ formatDate(doc.created_at) }}
+                                    </div>
+                                    <div class="text-xs truncate w-full text-right"
+                                        :class="selectedDocument?.id === doc.id ? 'text-foreground font-semibold' : 'text-muted-foreground font-medium'">
+                                        {{ doc.metadata?.[0]?.invoice?.invoice_type?.name ?? '—' }}
+                                    </div>
                                 </div>
-                            </div>
-                        </CardContent>
-                    </Card>
+                            </CardContent>
+                        </Card>
+                    </template>
+                    <template v-else>
+                        <div class="h-full flex items-start justify-center text-muted-foreground text-sm pt-10">
+                            No documents to preview.
+                        </div>
+                    </template>
                 </ScrollArea>
             </ResizablePanel>
 
@@ -37,8 +44,9 @@
                     <div v-if="hasValidDocument" class="flex-grow">
                         <iframe :src="document" class="w-full h-full rounded border" />
                     </div>
-                    <div v-else class="h-full flex items-start justify-center text-muted-foreground text-sm pt-10">
-                        Vyberte dokument pro náhled.
+                    <div v-else-if="documents.length > 0"
+                        class="h-full flex items-start justify-center text-muted-foreground text-sm pt-10">
+                        Select a document to preview.
                     </div>
                 </div>
             </ResizablePanel>
@@ -60,9 +68,9 @@
                             </div>
                         </div>
                     </template>
-                    <template v-else>
+                    <template v-else-if="documents.length > 0">
                         <div class="h-full flex items-start justify-center text-muted-foreground text-sm pt-10">
-                            Vyberte dokument pro zobrazení metadat.
+                            Select a document to view metadata.
                         </div>
                     </template>
                 </ScrollArea>
@@ -124,7 +132,7 @@ function formatDate(dateStr: string | undefined): string {
 }
 
 async function loadDocument(doc: CompanyDocument) {
-    const token = useCookie('token').value
+    const token = getToken()
     selectedDocument.value = doc
     const blob = await fetchExternal<Blob>(`/documents/${doc.id}/download`, token!)
 

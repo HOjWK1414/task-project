@@ -1,4 +1,6 @@
 import type { CompanyDocument } from '~/models/external/keysmash/companyDocument'
+import type { DocumentsFilter } from '~/models/shared/documentsFilterModel'
+import { defaultDocumentsFilter } from '~/models/shared/documentsFilterModel'
 
 export interface DocumentsPageModel {
     filter_processed: string
@@ -9,13 +11,7 @@ export interface DocumentsPageModel {
     data: {
         documents: CompanyDocument[]
         countOfAllDocuments: number
-        filter: {
-            isProcessed: boolean
-            isApproved: boolean
-            search: string
-            page: number
-            itemsPerPage: number
-        }
+        filter: DocumentsFilter
     }
 }
 
@@ -28,12 +24,6 @@ export const documentsPageModel: DocumentsPageModel = {
     data: {
         documents: [],
         countOfAllDocuments: 0,
-        filter: {
-            isProcessed: false,
-            isApproved: true,
-            search: '',
-            page: 1,
-            itemsPerPage: 10,
-        }
-    }
+        filter: defaultDocumentsFilter,
+    },
 }

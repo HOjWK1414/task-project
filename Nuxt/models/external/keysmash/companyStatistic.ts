@@ -1,4 +1,4 @@
-export interface CompanyStatistics {
+export interface CompanyStatistic {
     approved: number
     not_approved: number
     not_processed: number

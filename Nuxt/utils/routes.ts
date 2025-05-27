@@ -1,14 +1,21 @@
 export const ROUTES = {
     login: {
-        name: null,
         path: '/',
+        items: [
+            { name: 'Login' },
+        ],
     },
     dashboard: {
-        name: 'Dashboard',
         path: '/dashboard',
+        items: [
+            { name: 'Dashboard' },
+        ],
     },
     documents: {
-        name: 'Documents',
-        path: '/dashboard/documents',
+        path: '/company/documents',
+        items: [
+            { name: 'Dashboard', path: '/dashboard' },
+            { name: 'Documents of company #{id}' },
+        ],
     },
 }

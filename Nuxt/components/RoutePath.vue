@@ -1,15 +1,14 @@
-<!-- components/ui/RoutePath.vue -->
 <template>
-    <nav class="text-sm text-gray-500 flex items-center gap-2">
-        <template v-for="(segment, index) in segments" :key="index">
-            <span v-if="index !== 0">/</span>
-            <span v-if="index !== segments.length - 1">
-                <NuxtLink :to="getPath(index)" class="hover:underline text-gray-600">
-                    {{ getName(getPath(index), segment) }}
-                </NuxtLink>
+    <nav class="text-sm text-muted-foreground flex items-center gap-2">
+        <template v-for="(item, index) in navItems" :key="index">
+            <span v-if="index !== 0"> &gt; </span>
+
+            <span v-if="item.path && index !== lastIndex">
+                <NuxtLink :to="item.path">{{ item.label }}</NuxtLink>
             </span>
-            <span v-else class="text-black font-medium">
-                {{ getName(getPath(index), segment) }}
+
+            <span v-else class="text-black font-semibold">
+                {{ item.label }}
             </span>
         </template>
     </nav>
@@ -18,20 +17,32 @@
 <script setup lang="ts">
 import { useRoute } from 'vue-router'
 import { ROUTES } from '~/utils/routes'
+import type { NavItem } from '~/models/utils/NavItem'
+
+const props = defineProps<{
+    keys?: Record<string, string>
+}>()
 
 const route = useRoute()
 
-const segments = computed(() =>
-    route.path.split('/').filter(Boolean)
-)
+const cleanParams: Record<string, string> = {}
+Object.entries(route.params).forEach(([key, value]) => {
+    cleanParams[key] = Array.isArray(value) ? value[0] : value ?? ''
+})
 
-const getPath = (index: number) =>
-    '/' + segments.value.slice(0, index + 1).join('/')
+const allKeys = { ...cleanParams, ...props.keys }
 
-const getName = (path: string, fallback: string) => {
-    const found = Object.values(ROUTES).find(r => r.path === path)
-    return found?.name ?? capitalize(fallback)
+function formatNavItems(items: NavItem[], values: Record<string, string>): (NavItem & { label: string })[] {
+    return items.map(item => ({
+        ...item,
+        label: item.name.replace(/\{(\w+)\}/g, (_, key) => values[key] ?? `{${key}}`),
+    }))
 }
 
-const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1)
+const matchedRoute = Object.values(ROUTES)
+    .filter(r => route.path.startsWith(r.path))
+    .sort((a, b) => b.path.length - a.path.length)[0]
+
+const navItems = matchedRoute ? formatNavItems(matchedRoute.items ?? [], allKeys) : []
+const lastIndex = navItems.length - 1
 </script>

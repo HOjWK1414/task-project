@@ -1,5 +1,5 @@
 
-import type { CompanyStatistics } from './companyStatistic'
+import type { CompanyStatistic } from './companyStatistic'
 
 export interface Company {
     id: number
@@ -13,5 +13,5 @@ export interface Company {
     virtual_assistant_auto_approve: boolean
     created_at: string
     updated_at: string
-    statistics?: CompanyStatistics
+    statistics?: CompanyStatistic
 }
