@@ -53,8 +53,9 @@
         <div class="w-full mt-4 flex justify-end">
             <div class="inline-block">
                 <Pagination :items-per-page="10" :total="10" :default-page="1">
-                    <PaginationPrevious> Previous </PaginationPrevious>
-                    <PaginationNext> Next </PaginationNext>
+                    <PaginationPrevious class="border border-gray-300 rounded-md px-3 mx-1"> Previous
+                    </PaginationPrevious>
+                    <PaginationNext class="border border-gray-300 rounded-md px-2"> Next </PaginationNext>
                 </Pagination>
             </div>
         </div>
