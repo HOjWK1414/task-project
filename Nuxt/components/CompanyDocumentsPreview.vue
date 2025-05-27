@@ -64,7 +64,7 @@
                         <div class="p-2 grid grid-cols-2 gap-4 text-sm">
                             <div v-for="field in fields" :key="field.label">
                                 <Label class="p-1" :for="field.label">{{ field.label }}</Label>
-                                <Input :id="field.label" v-model="field.label" :placeholder="field.placeholder" />
+                                <Input :id="field.label" v-model="field.value" :placeholder="field.placeholder" />
                             </div>
                         </div>
                     </template>
@@ -104,6 +104,10 @@ watch(
         if (newDocs.length > 0) {
             await loadDocument(newDocs[0])
         }
+        else {
+            document.value = '';
+            selectedDocument.value = null;
+        }
     }
 )
 
@@ -119,18 +123,18 @@ const fields = computed(() => {
     if (!metadata.value) return []
     const i = metadata.value.invoice
     return [
-        { label: 'documentNumber', value: metadata.value.CompanyDocument_number, placeholder: 'e.g. 20250000001' },
-        { label: 'accountingNumber', value: i.accounting_number, placeholder: 'e.g. XX2025010001' },
-        { label: 'vendorName', value: i.vendor_name, placeholder: 'e.g. Klient s.r.o.' },
-        { label: 'metadata.month', value: metadata.value.month, placeholder: '1' },
-        { label: 'metadata.year', value: metadata.value.year, placeholder: '2025' },
-        { label: 'variableSymbol', value: i.variable_symbol, placeholder: 'e.g. 20250000001' },
-        { label: 'date_issued', value: i.date_issued, placeholder: 'e.g. 2025-01-01' },
-        { label: 'date_due', value: i.date_due, placeholder: 'e.g. 2025-01-01' },
-        { label: 'date_tax', value: i.date_tax, placeholder: 'e.g. 2025-01-01' },
-        { label: 'date_tax_audit_report', value: i.date_tax_audit_report, placeholder: 'e.g. 2025-01-01' },
-        { label: 'contract', value: i.contract, placeholder: 'e.g. 20250000001' },
-        { label: 'centre', value: i.centre, placeholder: 'e.g. XX2025010001' },
+        { label: 'documentNumber', value: metadata.value.CompanyDocument_number ?? undefined, placeholder: 'e.g. 20250000001' },
+        { label: 'accountingNumber', value: i.accounting_number ?? undefined, placeholder: 'e.g. XX2025010001' },
+        { label: 'vendorName', value: i.vendor_name ?? undefined, placeholder: 'e.g. Klient s.r.o.' },
+        { label: 'metadata.month', value: metadata.value.month ?? undefined, placeholder: '1' },
+        { label: 'metadata.year', value: metadata.value.year ?? undefined, placeholder: '2025' },
+        { label: 'variableSymbol', value: i.variable_symbol ?? undefined, placeholder: 'e.g. 20250000001' },
+        { label: 'date_issued', value: i.date_issued ?? undefined, placeholder: 'e.g. 2025-01-01' },
+        { label: 'date_due', value: i.date_due ?? undefined, placeholder: 'e.g. 2025-01-01' },
+        { label: 'date_tax', value: i.date_tax ?? undefined, placeholder: 'e.g. 2025-01-01' },
+        { label: 'date_tax_audit_report', value: i.date_tax_audit_report ?? undefined, placeholder: 'e.g. 2025-01-01' },
+        { label: 'contract', value: i.contract ?? undefined, placeholder: 'e.g. 20250000001' },
+        { label: 'centre', value: i.centre ?? undefined, placeholder: 'e.g. XX2025010001' },
     ]
 })
 

@@ -45,7 +45,11 @@
     </div>
 </template>
 
-
+<style>
+a {
+    text-decoration: underline !important;
+}
+</style>
 
 <script setup lang="ts">
 import { loginPageModel, type LoginPageModel } from '~/models/pages/loginPageModel'
